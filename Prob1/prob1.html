@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Number Line Interactive with Distances Text Only</title>
+<title>Number Line Interactive with Ratio Check</title>
 <style>
   body {
     display: flex;
@@ -16,9 +16,17 @@
   #numberLineCanvas {
     border: 1px solid black;
   }
+  #problemStatement {
+    margin-bottom: 20px;
+    text-align: center;
+    max-width: 600px;
+  }
 </style>
 </head>
 <body>
+<div id="problemStatement">
+  <p>On a 100cm measuring stick, marks are made at 19, N, and 99 cm from left to right. The distance between marks at N and 99cm is three times the distance between the marks at N and 19cm. What number is N?</p>
+</div>
 <div>
   <label for="nValueSlider">N Value: <span id="nValueDisplay">60</span></label>
   <input type="range" id="nValueSlider" min="20" max="98" value="60">
@@ -51,9 +59,17 @@ function drawNumberLine(nValue) {
   drawPoint(point99, '99', 100);
   drawPoint(pointN, `N=${nValue}`, 100);
 
-  // Show distances as text only
-  showDistanceText(point19, pointN, `N-19=${nValue-19}`, 75);
-  showDistanceText(pointN, point99, `99-N=${99-nValue}`, 75);
+  // Calculate and show distances and ratio
+  const distanceNto19 = nValue - 19;
+  const distance99toN = 99 - nValue;
+  const ratio = distance99toN / distanceNto19;
+  showDistanceText(point19, pointN, `N-19=${distanceNto19}`, 75);
+  showDistanceText(pointN, point99, `99-N=${distance99toN}`, 125);
+  
+  // Show ratio and change color if ratio equals 3
+  const ratioText = `Ratio: ${ratio.toFixed(2)}`;
+  ctx.fillStyle = ratio === 3 ? 'green' : 'black';
+  ctx.fillText(ratioText, canvas.width / 2, 150);
 
   function drawPoint(x, text, y) {
     ctx.beginPath();
